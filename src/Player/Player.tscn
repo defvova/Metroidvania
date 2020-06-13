@@ -76,3 +76,8 @@ anims/Run = SubResource( 2 )
 [node name="CollisionShade2D" type="CollisionShape2D" parent="."]
 position = Vector2( -1, -8 )
 shape = SubResource( 3 )
+
+[node name="CameraFollow" type="RemoteTransform2D" parent="."]
+position = Vector2( 0, -8 )
+update_rotation = false
+update_scale = false
