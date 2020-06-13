@@ -8,11 +8,14 @@ export (int) var JUMP_FORCE = 128
 export (int) var MAX_SLOPE_ANGLE = 46
 
 var motion := Vector2.ZERO
+var snap_vector := Vector2.ZERO
+var just_jumped := false
 
 onready var sprite := $Sprite as Sprite
 onready var spriteAnimator := $SpriteAnimator as AnimationPlayer
 
 func _physics_process(delta: float) -> void:
+	just_jumped = false
 	var input_vector: Vector2 = get_input_vector()
 
 	apply_horizontal_force(input_vector, delta)
@@ -39,19 +42,20 @@ func apply_friction() -> void:
 	if is_on_floor():
 		motion.x = lerp(motion.x, 0, FRICTION)
 
-func move() -> void:
-	motion = move_and_slide(motion, Vector2.UP)
-
 func jump_check() -> void:
 	if is_on_floor():
+		snap_vector = Vector2.DOWN
+
 		if Input.is_action_just_pressed("ui_up"):
 			motion.y = -JUMP_FORCE
+			just_jumped = true
+			snap_vector = Vector2.ZERO
 
 	if Input.is_action_just_released("ui_up") && motion.y < -JUMP_FORCE/2:
 		motion.y = -JUMP_FORCE/2
 
 func apply_gravity(delta: float) -> void:
-	#if not is_on_floor():
+	if not is_on_floor():
 		motion.y += GRAVITY * delta
 		motion.y = min(motion.y, JUMP_FORCE)
 
@@ -64,3 +68,26 @@ func update_animation(input_vector: Vector2) -> void:
 
 	if !is_on_floor():
 		spriteAnimator.play("Jump")
+
+func move() -> void:
+	var was_in_air: bool = !is_on_floor()
+	var was_on_floor: bool = is_on_floor()
+	var last_position: Vector2 = position
+	var last_motion: Vector2 = motion
+
+	motion = move_and_slide_with_snap(motion, snap_vector * 4, Vector2.UP, true, 4, deg2rad(MAX_SLOPE_ANGLE))
+
+	# Landing
+	if was_in_air && is_on_floor():
+		motion.x = last_motion.x
+
+	var is_in_air: bool = !is_on_floor()
+	var was_not_jumped: bool = !just_jumped
+	# Just left ground
+	if was_on_floor && is_in_air && was_not_jumped:
+		motion.y = 0
+		position.y = last_position.y
+
+	# Prevent sliding (hack)
+	if is_on_floor() && get_floor_velocity().length() == 0 && abs(motion.x) < 1:
+		position.x = last_position.x
