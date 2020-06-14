@@ -55,7 +55,7 @@ func jump_check() -> void:
 		motion.y = -JUMP_FORCE/2
 
 func apply_gravity(delta: float) -> void:
-	if not is_on_floor():
+	if !is_on_floor():
 		motion.y += GRAVITY * delta
 		motion.y = min(motion.y, JUMP_FORCE)
 
