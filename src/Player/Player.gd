@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+const DustEffect = preload("res://src/Effects/DustEffect.tscn")
+
 export (int) var ACCELERATION = 512
 export (int) var MAX_SPEED = 64
 export (float) var FRICTION = 0.25
@@ -13,6 +15,7 @@ var just_jumped := false
 
 onready var sprite := $Sprite as Sprite
 onready var spriteAnimator := $SpriteAnimator as AnimationPlayer
+onready var coyoteJumpTimer := $CoyoteJumpTimer as Timer
 
 func _physics_process(delta: float) -> void:
 	just_jumped = false
@@ -23,6 +26,13 @@ func _physics_process(delta: float) -> void:
 	jump_check()
 	update_animation(input_vector)
 	move()
+
+func create_dust_effect() -> void:
+	var dust_position: Vector2 = global_position
+	dust_position.x += rand_range(-4, 4)
+	var dustEffect := DustEffect.instance()
+	get_parent().call_deferred("add_child", dustEffect)
+	dustEffect.global_position = dust_position
 
 func get_input_vector() -> Vector2:
 	var input_vector := Vector2.ZERO
@@ -43,7 +53,7 @@ func apply_friction() -> void:
 		motion.x = lerp(motion.x, 0, FRICTION)
 
 func jump_check() -> void:
-	if is_on_floor():
+	if is_on_floor() || coyoteJumpTimer.time_left > 0:
 		snap_vector = Vector2.DOWN
 
 		if Input.is_action_just_pressed("ui_up"):
@@ -60,11 +70,15 @@ func apply_gravity(delta: float) -> void:
 		motion.y = min(motion.y, JUMP_FORCE)
 
 func update_animation(input_vector: Vector2) -> void:
+	sprite.scale.x = sign(get_local_mouse_position().x)
 	if input_vector.x == 0:
 		spriteAnimator.play("Idle")
 	else:
-		sprite.scale.x = sign(input_vector.x)
-		spriteAnimator.play("Run")
+		#sprite.scale.x = sign(input_vector.x)
+		var playback_speed: int = input_vector.x * sprite.scale.x
+		var is_playback: bool = playback_speed < 0
+
+		spriteAnimator.play("Run", 0, playback_speed, is_playback)
 
 	if !is_on_floor():
 		spriteAnimator.play("Jump")
@@ -87,6 +101,7 @@ func move() -> void:
 	if was_on_floor && is_in_air && was_not_jumped:
 		motion.y = 0
 		position.y = last_position.y
+		coyoteJumpTimer.start()
 
 	# Prevent sliding (hack)
 	if is_on_floor() && get_floor_velocity().length() == 0 && abs(motion.x) < 1:
