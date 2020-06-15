@@ -18,6 +18,7 @@ var just_jumped := false
 onready var sprite := $Sprite as Sprite
 onready var spriteAnimator := $SpriteAnimator as AnimationPlayer
 onready var coyoteJumpTimer := $CoyoteJumpTimer as Timer
+onready var fireBulletTimer := $FireBulletTimer as Timer
 onready var gun := $Sprite/PlayerGun as Node2D
 onready var muzzle := $Sprite/PlayerGun/PlayerGun/Muzzle as Position2D
 
@@ -31,7 +32,7 @@ func _physics_process(delta: float) -> void:
 	update_animation(input_vector)
 	move()
 
-	if Input.is_action_just_pressed("fire"):
+	if Input.is_action_pressed("fire") && fireBulletTimer.time_left == 0:
 		fire_bullet()
 
 func fire_bullet() -> void:
@@ -39,10 +40,12 @@ func fire_bullet() -> void:
 	bullet.velocity = Vector2.RIGHT.rotated(gun.rotation) * BULLET_SPEED
 	bullet.velocity.x *= sprite.scale.x
 	bullet.rotation = bullet.velocity.angle()
+	fireBulletTimer.start()
 
 func create_dust_effect() -> void:
 	var dust_position: Vector2 = global_position
 	dust_position.x += rand_range(-4, 4)
+# warning-ignore:return_value_discarded
 	Utils.instance_scene_on_main(DustEffect, dust_position)
 
 func get_input_vector() -> Vector2:
@@ -86,7 +89,7 @@ func update_animation(input_vector: Vector2) -> void:
 		spriteAnimator.play("Idle")
 	else:
 		#sprite.scale.x = sign(input_vector.x)
-		var playback_speed: int = input_vector.x * sprite.scale.x
+		var playback_speed: float = input_vector.x * sprite.scale.x
 		var is_playback: bool = playback_speed < 0
 
 		spriteAnimator.play("Run", 0, playback_speed, is_playback)

@@ -116,3 +116,7 @@ __meta__ = {
 [node name="CoyoteJumpTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="FireBulletTimer" type="Timer" parent="."]
+wait_time = 0.25
+one_shot = true
