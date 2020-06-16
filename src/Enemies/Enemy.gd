@@ -4,5 +4,10 @@ export (int) var MAX_SPEED = 15
 
 var motion := Vector2.ZERO as Vector2
 
-func _on_Hurtbox_hit(_damage: int) -> void:
+onready var stats = $EnemyStats
+
+func _on_Hurtbox_hit(damage: int) -> void:
+	stats.health -= damage
+
+func _on_EnemyStats_enemy_died() -> void:
 	queue_free()
