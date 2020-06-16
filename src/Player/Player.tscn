@@ -76,8 +76,7 @@ extents = Vector2( 4, 8 )
 collision_mask = 2
 script = ExtResource( 2 )
 __meta__ = {
-"_edit_group_": true,
-"_edit_lock_": true
+"_edit_group_": true
 }
 
 [node name="Sprite" type="Sprite" parent="."]
