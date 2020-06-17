@@ -28,6 +28,7 @@ config/icon="res://icon.png"
 
 Utils="*res://src/Utils.gd"
 ResourceLoader="*res://src/ResourceLoader.gd"
+Events="*res://src/Events.gd"
 
 [debug]
 
