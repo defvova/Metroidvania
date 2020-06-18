@@ -18,6 +18,7 @@ var invincible: bool = false setget set_invincible
 var motion: Vector2 = Vector2.ZERO
 var snap_vector: Vector2 = Vector2.ZERO
 var just_jumped: bool = false
+var double_jump: bool = true
 
 onready var sprite := $Sprite as Sprite
 onready var spriteAnimator := $SpriteAnimator as AnimationPlayer
@@ -82,14 +83,22 @@ func jump_check() -> void:
 		snap_vector = Vector2.DOWN
 
 		if Input.is_action_just_pressed("ui_up"):
-# warning-ignore:return_value_discarded
-			Utils.instance_scene_on_main(JumpEffect, global_position)
-			motion.y = -JUMP_FORCE
+			jump(JUMP_FORCE)
 			just_jumped = true
-			snap_vector = Vector2.ZERO
+	else:
+		if Input.is_action_just_released("ui_up") && motion.y < -JUMP_FORCE/2:
+			motion.y = -JUMP_FORCE/2
+	
+		if Input.is_action_just_pressed("ui_up") && double_jump:
+			jump(JUMP_FORCE * .75)
+			double_jump = false
 
-	if Input.is_action_just_released("ui_up") && motion.y < -JUMP_FORCE/2:
-		motion.y = -JUMP_FORCE/2
+		
+func jump(force: int) -> void:
+	# warning-ignore:return_value_discarded
+	Utils.instance_scene_on_main(JumpEffect, global_position)
+	motion.y = -force
+	snap_vector = Vector2.ZERO
 
 func apply_gravity(delta: float) -> void:
 	if !is_on_floor():
@@ -123,6 +132,7 @@ func move() -> void:
 		motion.x = last_motion.x
 # warning-ignore:return_value_discarded
 		Utils.instance_scene_on_main(JumpEffect, global_position)
+		double_jump = true
 
 	var is_in_air: bool = !is_on_floor()
 	var was_not_jumped: bool = !just_jumped
