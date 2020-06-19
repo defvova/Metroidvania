@@ -6,6 +6,9 @@ var MainInstances = ResourceLoader.MainInstances
 
 onready var sprite := $Sprite as Sprite
 
+func _ready() -> void:
+	set_physics_process(false)
+
 func _physics_process(delta: float) -> void:
 	var player: KinematicBody2D = MainInstances.Player
 	if player:
@@ -17,3 +20,7 @@ func chase_player(player: KinematicBody2D, delta: float) -> void:
 	motion = motion.clamped(MAX_SPEED)
 	sprite.flip_h = global_position < player.global_position
 	motion = move_and_slide(motion)
+
+
+func _on_VisibilityNotifier2D_screen_entered() -> void:
+	set_physics_process(true)
