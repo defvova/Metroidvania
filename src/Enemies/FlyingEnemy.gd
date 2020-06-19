@@ -21,6 +21,5 @@ func chase_player(player: KinematicBody2D, delta: float) -> void:
 	sprite.flip_h = global_position < player.global_position
 	motion = move_and_slide(motion)
 
-
 func _on_VisibilityNotifier2D_screen_entered() -> void:
 	set_physics_process(true)
