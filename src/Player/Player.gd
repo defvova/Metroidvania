@@ -63,10 +63,9 @@ func _physics_process(delta: float) -> void:
 				sprite.scale.x = wall_axis
 				
 			wall_slide_jump_check(wall_axis)
-			wall_slide_drop_check(delta)
-			wall_slide_fast_slide_check(delta)
+			wall_slide_drop(delta)
 			move()
-			wall_detach_check(wall_axis)
+			wall_detach(delta, wall_axis)
 
 	if Input.is_action_pressed("fire") && fireBulletTimer.time_left == 0:
 		fire_bullet()
@@ -174,6 +173,7 @@ func wall_slide_check() -> void:
 	if !is_on_floor() && is_on_wall():
 		state = WALL_SLIDE
 		double_jump = true
+		create_dust_effect()
 
 func get_wall_axis() -> int:
 	var is_right_wall = test_move(transform, Vector2.RIGHT)
@@ -187,7 +187,13 @@ func wall_slide_jump_check(wall_axis) -> void:
 		motion.y = -JUMP_FORCE/1.25
 		state = MOVE
 		
-func wall_slide_drop_check(delta: float) -> void:
+func wall_slide_drop(delta: float) -> void:
+	var max_slide_speed = WALL_SLIDE_SPEED
+	if Input.is_action_pressed("ui_down"):
+		max_slide_speed = MAX_WALL_SLIDE_SPEED
+	motion.y = min(motion.y + GRAVITY * delta, max_slide_speed)
+		
+func wall_detach(delta: float, wall_axis: int) -> void:
 	if Input.is_action_just_pressed("ui_right"):
 		motion.x = ACCELERATION * delta
 		state = MOVE
@@ -196,13 +202,6 @@ func wall_slide_drop_check(delta: float) -> void:
 		motion.x = -ACCELERATION * delta
 		state = MOVE
 		
-func wall_slide_fast_slide_check(delta: float) -> void:
-	var max_slide_speed = WALL_SLIDE_SPEED
-	if Input.is_action_pressed("ui_down"):
-		max_slide_speed = MAX_WALL_SLIDE_SPEED
-	motion.y = min(motion.y + GRAVITY * delta, max_slide_speed)
-	
-func wall_detach_check(wall_axis: int) -> void:
 	if wall_axis == 0 || is_on_floor():
 		state = MOVE
 
