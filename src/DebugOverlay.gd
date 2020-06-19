@@ -9,6 +9,7 @@ func add_stats(name: String, object: Object, ref: String, is_method: bool) -> vo
 func _process(_delta: float) -> void:
 	var label_text: String
 	
+# warning-ignore:unassigned_variable_op_assign
 	label_text += get_fps()
 	label_text += get_memory()
 	
