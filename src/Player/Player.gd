@@ -6,6 +6,7 @@ const PlayerBullet = preload("res://src/Player/PlayerBullet.tscn")
 const WallDustEffect = preload("res://src/Effects/WallDustEffect.tscn")
 
 var PlayerStats = ResourceLoader.PlayerStats
+var MainInstances = ResourceLoader.MainInstances
 
 export (int) var ACCELERATION = 512
 export (int) var MAX_SPEED = 64
@@ -42,6 +43,10 @@ func set_invincible(value: bool) -> void:
 	
 func _ready() -> void:
 	PlayerStats.connect("player_died", self, "_on_died")
+	MainInstances.Player = self
+	
+func _exit_tree() -> void:
+	MainInstances.Player = null
 
 func _physics_process(delta: float) -> void:
 	just_jumped = false
