@@ -3,6 +3,7 @@ extends KinematicBody2D
 const DustEffect = preload("res://src/Effects/DustEffect.tscn")
 const JumpEffect = preload("res://src/Effects/JumpEffect.tscn")
 const PlayerBullet = preload("res://src/Player/PlayerBullet.tscn")
+const WallDustEffect = preload("res://src/Effects/WallDustEffect.tscn")
 
 var PlayerStats = ResourceLoader.PlayerStats
 
@@ -186,6 +187,9 @@ func wall_slide_jump_check(wall_axis) -> void:
 		motion.x = wall_axis * MAX_SPEED
 		motion.y = -JUMP_FORCE/1.25
 		state = MOVE
+		var dust_position: Vector2 = global_position + Vector2(wall_axis * 4, 0)
+		var dust = Utils.instance_scene_on_main(WallDustEffect, dust_position)
+		dust.scale.x = wall_axis
 		
 func wall_slide_drop(delta: float) -> void:
 	var max_slide_speed = WALL_SLIDE_SPEED
