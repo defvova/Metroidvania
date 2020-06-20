@@ -44,7 +44,6 @@ Events="*res://src/Events.gd"
 
 [debug]
 
-settings/stdout/verbose_stdout=true
 gdscript/completion/autocomplete_setters_and_getters=true
 
 [display]

@@ -2,6 +2,8 @@ extends Node
 
 var Debug = preload("res://src/DebugOverlay.tscn")
 
+onready var currentLevel := $Level00 as Node
+
 func _ready() -> void:
 	VisualServer.set_default_clear_color(Color.black)
 

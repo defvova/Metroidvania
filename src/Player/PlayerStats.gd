@@ -24,7 +24,7 @@ func set_health(value: int) -> void:
 		emit_signal("player_died")
 
 func set_missiles(value: int) -> void:
-	missiles = clamp(value, 0, max_missiles)
+	missiles = clamp(value, 0, max_missiles) as int
 	emit_signal("player_missiles_changed", missiles)
 
 func set_missiles_unlocked(value: bool) -> void:

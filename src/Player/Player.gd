@@ -41,6 +41,8 @@ onready var gun := $Sprite/PlayerGun as Node2D
 onready var muzzle := $Sprite/PlayerGun/PlayerGun/Muzzle as Position2D
 onready var powerupDetector := $PowerupDetector as Area2D
 
+signal hit_door(door)
+
 func set_invincible(value: bool) -> void:
 	invincible = value
 	
