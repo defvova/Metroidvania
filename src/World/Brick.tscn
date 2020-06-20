@@ -6,6 +6,13 @@
 extents = Vector2( 8, 8 )
 
 [node name="Brick" type="StaticBody2D"]
+position = Vector2( 8, -8 )
+collision_layer = 18
+collision_mask = 0
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true
+}
 
 [node name="Brick" type="Sprite" parent="."]
 texture = ExtResource( 1 )
