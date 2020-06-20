@@ -79,8 +79,10 @@ func _physics_process(delta: float) -> void:
 		fire_bullet()
 		
 	if Input.is_action_pressed("fire_missile") && fireBulletTimer.time_left == 0:
-		fire_missile()
-
+		if PlayerStats.missiles > 0:
+			fire_missile()
+			PlayerStats.missiles -= 1
+			
 func fire_bullet() -> void:
 	var bullet: Object = Utils.instance_scene_on_main(PlayerBullet, muzzle.global_position)
 	bullet.velocity = Vector2.RIGHT.rotated(gun.rotation) * BULLET_SPEED
@@ -92,7 +94,7 @@ func fire_missile() -> void:
 	var missile: Object = Utils.instance_scene_on_main(PlayerMissile, muzzle.global_position)
 	missile.velocity = Vector2.RIGHT.rotated(gun.rotation) * MISSILE_BULLET_SPEED
 	missile.velocity.x *= sprite.scale.x
-	motion -= missile.velocity
+	motion -= missile.velocity * 0.25
 	missile.rotation = missile.velocity.angle()
 	fireBulletTimer.start()
 
