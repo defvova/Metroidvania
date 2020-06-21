@@ -41,25 +41,26 @@ onready var gun := $Sprite/PlayerGun as Node2D
 onready var muzzle := $Sprite/PlayerGun/PlayerGun/Muzzle as Position2D
 onready var powerupDetector := $PowerupDetector as Area2D
 
+# warning-ignore:unused_signal
 signal hit_door(door)
 
 func set_invincible(value: bool) -> void:
 	invincible = value
-	
+
 func _ready() -> void:
 	PlayerStats.connect("player_died", self, "_on_died")
 	MainInstances.Player = self
-	
+
 func _exit_tree() -> void:
 	MainInstances.Player = null
 
 func _physics_process(delta: float) -> void:
 	just_jumped = false
-	
+
 	match state:
 		MOVE:
 			var input_vector: Vector2 = get_input_vector()
-			
+
 			apply_horizontal_force(input_vector, delta)
 			apply_gravity(delta)
 			jump_check()
@@ -72,7 +73,7 @@ func _physics_process(delta: float) -> void:
 			var wall_axis = get_wall_axis()
 			if wall_axis != 0:
 				sprite.scale.x = wall_axis
-				
+
 			wall_slide_jump_check(wall_axis)
 			wall_slide_drop(delta)
 			move()
@@ -80,19 +81,19 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_pressed("fire") && fireBulletTimer.time_left == 0:
 		fire_bullet()
-		
+
 	if Input.is_action_pressed("fire_missile") && fireBulletTimer.time_left == 0:
 		if PlayerStats.missiles > 0 && PlayerStats.missiles_unlocked:
 			fire_missile()
 			PlayerStats.missiles -= 1
-			
+
 func fire_bullet() -> void:
 	var bullet: Object = Utils.instance_scene_on_main(PlayerBullet, muzzle.global_position)
 	bullet.velocity = Vector2.RIGHT.rotated(gun.rotation) * BULLET_SPEED
 	bullet.velocity.x *= sprite.scale.x
 	bullet.rotation = bullet.velocity.angle()
 	fireBulletTimer.start()
-	
+
 func fire_missile() -> void:
 	var missile: Object = Utils.instance_scene_on_main(PlayerMissile, muzzle.global_position)
 	missile.velocity = Vector2.RIGHT.rotated(gun.rotation) * MISSILE_BULLET_SPEED
@@ -135,12 +136,12 @@ func jump_check() -> void:
 	else:
 		if Input.is_action_just_released("ui_up") && motion.y < -JUMP_FORCE/2:
 			motion.y = -JUMP_FORCE/2
-	
+
 		if Input.is_action_just_pressed("ui_up") && double_jump:
 			jump(JUMP_FORCE * .75)
 			double_jump = false
 
-		
+
 func jump(force: int) -> void:
 	# warning-ignore:return_value_discarded
 	Utils.instance_scene_on_main(JumpEffect, global_position)
@@ -154,10 +155,10 @@ func apply_gravity(delta: float) -> void:
 
 func update_animation(input_vector: Vector2) -> void:
 	var facing: float = sign(get_local_mouse_position().x)
-	
+
 	if facing != 0:
-		sprite.scale.x = facing 
-		
+		sprite.scale.x = facing
+
 	if input_vector.x == 0:
 		spriteAnimator.play("Idle")
 	else:
@@ -206,7 +207,7 @@ func wall_slide_check() -> void:
 func get_wall_axis() -> int:
 	var is_right_wall = test_move(transform, Vector2.RIGHT)
 	var is_left_wall = test_move(transform, Vector2.LEFT)
-	
+
 	return int(is_left_wall) - int(is_right_wall)
 
 func wall_slide_jump_check(wall_axis) -> void:
@@ -217,22 +218,22 @@ func wall_slide_jump_check(wall_axis) -> void:
 		var dust_position: Vector2 = global_position + Vector2(wall_axis * 4, 0)
 		var dust = Utils.instance_scene_on_main(WallDustEffect, dust_position)
 		dust.scale.x = wall_axis
-		
+
 func wall_slide_drop(delta: float) -> void:
 	var max_slide_speed = WALL_SLIDE_SPEED
 	if Input.is_action_pressed("ui_down"):
 		max_slide_speed = MAX_WALL_SLIDE_SPEED
 	motion.y = min(motion.y + GRAVITY * delta, max_slide_speed)
-		
+
 func wall_detach(delta: float, wall_axis: int) -> void:
 	if Input.is_action_just_pressed("ui_right"):
 		motion.x = ACCELERATION * delta
 		state = MOVE
-		
+
 	if Input.is_action_just_pressed("ui_left"):
 		motion.x = -ACCELERATION * delta
 		state = MOVE
-		
+
 	if wall_axis == 0 || is_on_floor():
 		state = MOVE
 

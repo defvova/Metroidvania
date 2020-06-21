@@ -16,10 +16,10 @@ signal player_died
 func set_health(value: int) -> void:
 	if value < health:
 		Events.emit_signal("add_screenshake", 0.4, 0.5)
-		
+
 	health = clamp(value, 0, MAX_HEALTH) as int
 	emit_signal("player_health_changed", health)
-	
+
 	if health == 0:
 		emit_signal("player_died")
 

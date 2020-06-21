@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://src/World/BaseLevel.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/World/Door.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/DoorConnections/00_link_01.tres" type="Resource" id=3]
 
 [node name="Level00" instance=ExtResource( 1 )]
 
@@ -10,3 +11,5 @@ tile_data = PoolIntArray( 0, 0, 0, 1, 0, 1, 2, 0, 5, 3, 0, 196609, 4, 0, 196609,
 
 [node name="Door" parent="." index="1" instance=ExtResource( 2 )]
 position = Vector2( 312, 144 )
+connection = ExtResource( 3 )
+new_level_path = "res://src/World/Level01.tscn"
