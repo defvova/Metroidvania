@@ -8,9 +8,15 @@ extents = Vector2( 6, 7 )
 
 [node name="Spikes" type="Node2D"]
 position = Vector2( 8, 8 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Hitbox" parent="." instance=ExtResource( 1 )]
 collision_mask = 4

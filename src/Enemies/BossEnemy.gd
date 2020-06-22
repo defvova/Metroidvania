@@ -35,5 +35,9 @@ func fire_bullet() -> void:
 	velocity = velocity.rotated(deg2rad(rand_range(-30, 30)))
 	bullet.velocity = velocity
 
+func _on_EnemyStats_enemy_died() -> void:
+	emit_signal("died")
+	._on_EnemyStats_enemy_died()
+
 func _on_Timer_timeout() -> void:
 	fire_bullet()
