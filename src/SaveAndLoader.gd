@@ -1,5 +1,7 @@
 extends Node
 
+var is_loading: bool = false
+
 func save_game() -> void:
 	var save_game = File.new()
 	save_game.open("user://savegame.save", File.WRITE)
@@ -23,7 +25,11 @@ func load_game() -> void:
 
 	save_game.open("user://savegame.save", File.READ)
 	while !save_game.eof_reached():
-		var current_line = parse_json(save_game.get_line())
+		var json_data = save_game.get_line()
+
+		if !json_data:
+			continue
+		var current_line = parse_json(json_data)
 
 		if current_line:
 			var newNode = load(current_line["filename"]).instance()

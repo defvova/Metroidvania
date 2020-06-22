@@ -8,14 +8,19 @@ var MainInstances = ResourceLoader.MainInstances
 
 func _ready() -> void:
 	VisualServer.set_default_clear_color(Color.black)
+
+	if SaveAndLoader.is_loading:
+		SaveAndLoader.load_game()
+		SaveAndLoader.is_loading = false
+
 	MainInstances.Player.connect("hit_door", self, "_on_Player_hit_door")
 
-	var debug = Debug.instance()
-
-	debug.add_stats("Player position", $Player, "position", false)
-	debug.add_stats("Player motion", $Player, "motion", false)
-
-	get_parent().call_deferred("add_child", debug)
+#	var debug = Debug.instance()
+#
+#	debug.add_stats("Player position", $Player, "position", false)
+#	debug.add_stats("Player motion", $Player, "motion", false)
+#
+#	get_parent().call_deferred("add_child", debug)
 
 func change_level(door: Area2D) -> void:
 	var offset: Vector2 = currentLevel.position
