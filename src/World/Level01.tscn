@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/World/BaseLevel.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/World/Door.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/DoorConnections/00_link_01.tres" type="Resource" id=3]
 [ext_resource path="res://src/DoorConnections/01_link_02.tres" type="Resource" id=4]
 [ext_resource path="res://src/Enemies/Spikes.tscn" type="PackedScene" id=5]
+[ext_resource path="res://src/World/SaveStation.tscn" type="PackedScene" id=6]
 
 [node name="Level01" instance=ExtResource( 1 )]
 
@@ -51,3 +52,6 @@ new_level_path = "res://src/World/Level00.tscn"
 position = Vector2( 312, 144 )
 connection = ExtResource( 4 )
 new_level_path = "res://src/World/Level02.tscn"
+
+[node name="SaveStation" parent="." index="4" instance=ExtResource( 6 )]
+position = Vector2( 152, 176 )

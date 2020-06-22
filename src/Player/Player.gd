@@ -32,6 +32,7 @@ var snap_vector: Vector2 = Vector2.ZERO
 var just_jumped: bool = false
 var double_jump: bool = true
 
+onready var cameraFollow := $CameraFollow as RemoteTransform2D
 onready var sprite := $Sprite as Sprite
 onready var spriteAnimator := $SpriteAnimator as AnimationPlayer
 onready var blinkAnimator := $BlinkAnimator as AnimationPlayer
@@ -50,9 +51,11 @@ func set_invincible(value: bool) -> void:
 func _ready() -> void:
 	PlayerStats.connect("player_died", self, "_on_died")
 	MainInstances.Player = self
+	call_deferred("asign_camera_follow")
 
-func _exit_tree() -> void:
+func queue_free() -> void:
 	MainInstances.Player = null
+	.queue_free()
 
 func _physics_process(delta: float) -> void:
 	just_jumped = false
@@ -86,6 +89,9 @@ func _physics_process(delta: float) -> void:
 		if PlayerStats.missiles > 0 && PlayerStats.missiles_unlocked:
 			fire_missile()
 			PlayerStats.missiles -= 1
+
+func asign_camera_follow() -> void:
+	cameraFollow.remote_path = MainInstances.WorldCamera.get_path()
 
 func save() -> Dictionary:
 	var save_dictionary = {
