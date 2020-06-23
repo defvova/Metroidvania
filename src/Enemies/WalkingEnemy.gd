@@ -2,7 +2,7 @@ extends "res://src/Enemies/Enemy.gd"
 
 enum DIRECTION { LEFT = -1, RIGHT = 1 }
 
-export (DIRECTION) var WALKING_DIRECTION
+export (DIRECTION) var WALKING_DIRECTION = DIRECTION.LEFT
 
 var state
 
