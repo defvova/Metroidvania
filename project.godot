@@ -42,6 +42,8 @@ Utils="*res://src/Utils.gd"
 ResourceLoader="*res://src/ResourceLoader.gd"
 Events="*res://src/Events.gd"
 SaveAndLoader="*res://src/SaveAndLoader.gd"
+SoundFx="*res://src/MusicAndSounds/SoundFX.tscn"
+Music="*res://src/MusicAndSounds/Music.tscn"
 
 [debug]
 

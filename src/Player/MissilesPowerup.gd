@@ -5,5 +5,6 @@ func _ready() -> void:
 		queue_free()
 
 func _pickup() -> void:
+	._pickup()
 	PlayerStats.missiles_unlocked = true
 	queue_free()

@@ -8,6 +8,7 @@ var MainInstances = ResourceLoader.MainInstances
 
 func _ready() -> void:
 	VisualServer.set_default_clear_color(Color.black)
+	Music.list_play()
 
 	if SaveAndLoader.is_loading:
 		SaveAndLoader.load_game()
@@ -44,6 +45,9 @@ func get_door_with_connection(notDoor: Area2D, connection: Resource) -> Area2D:
 
 	return null
 
-
 func _on_Player_hit_door(door: Area2D) -> void:
 	call_deferred("change_level", door)
+
+func _on_Player_player_died() -> void:
+	yield(get_tree().create_timer(1.0), "timeout")
+	get_tree().change_scene("res://src/Menu/GameOverMenu.tscn")

@@ -44,6 +44,7 @@ onready var powerupDetector := $PowerupDetector as Area2D
 
 # warning-ignore:unused_signal
 signal hit_door(door)
+signal player_died
 
 func set_invincible(value: bool) -> void:
 	invincible = value
@@ -120,6 +121,7 @@ func fire_missile() -> void:
 	fireBulletTimer.start()
 
 func create_dust_effect() -> void:
+	SoundFx.play("Step", rand_range(0.6, 1.2), -10)
 	var dust_position: Vector2 = global_position
 	dust_position.x += rand_range(-4, 4)
 # warning-ignore:return_value_discarded
@@ -160,6 +162,7 @@ func jump_check() -> void:
 
 
 func jump(force: int) -> void:
+	SoundFx.play("Jump", rand_range(0.8, 1.1), -5)
 	# warning-ignore:return_value_discarded
 	Utils.instance_scene_on_main(JumpEffect, global_position)
 	motion.y = -force
@@ -229,6 +232,7 @@ func get_wall_axis() -> int:
 
 func wall_slide_jump_check(wall_axis) -> void:
 	if Input.is_action_just_pressed("ui_up"):
+		SoundFx.play("Jump", rand_range(0.8, 1.1), -5)
 		motion.x = wall_axis * MAX_SPEED
 		motion.y = -JUMP_FORCE/1.25
 		state = MOVE
@@ -256,10 +260,12 @@ func wall_detach(delta: float, wall_axis: int) -> void:
 
 func _on_Hurtbox_hit(damage: int) -> void:
 	if !invincible:
+		SoundFx.play("Hurt")
 		PlayerStats.health -= damage
 		blinkAnimator.play("Blink")
 
 func _on_died() -> void:
+	emit_signal("player_died")
 	queue_free()
 
 func _on_PowerupDetector_area_entered(area: Area2D) -> void:
