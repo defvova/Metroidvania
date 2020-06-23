@@ -11,6 +11,10 @@ onready var leftWallCheck := $LeftWallCheck as RayCast2D
 
 signal died
 
+func _ready() -> void:
+	if SaveAndLoader.custom_data.boss_defeated:
+		queue_free()
+
 func _process(delta: float) -> void:
 	chase_player(delta)
 
@@ -37,6 +41,7 @@ func fire_bullet() -> void:
 
 func _on_EnemyStats_enemy_died() -> void:
 	emit_signal("died")
+	SaveAndLoader.custom_data.boss_defeated = true
 	._on_EnemyStats_enemy_died()
 
 func _on_Timer_timeout() -> void:

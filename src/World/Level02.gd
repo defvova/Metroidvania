@@ -10,7 +10,8 @@ func set_block_door(active: bool) -> void:
 	blockDoor.set_collision_mask_bit(PLAYER_BIT, active)
 
 func _on_Trigger_area_triggered() -> void:
-	set_block_door(true)
+	var is_defeated: bool = !SaveAndLoader.custom_data.boss_defeated
+	set_block_door(is_defeated)
 
 func _on_BossEnemy_died() -> void:
 	set_block_door(false)

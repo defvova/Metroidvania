@@ -50,6 +50,7 @@ func set_invincible(value: bool) -> void:
 
 func _ready() -> void:
 	PlayerStats.connect("player_died", self, "_on_died")
+	PlayerStats.missiles_unlocked = SaveAndLoader.custom_data.missiles_unlocked
 	MainInstances.Player = self
 	call_deferred("asign_camera_follow")
 

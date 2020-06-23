@@ -1,10 +1,16 @@
 extends Node
 
 var is_loading: bool = false
+var custom_data: Dictionary = {
+	missiles_unlocked = false,
+	boss_defeated = false
+}
 
 func save_game() -> void:
 	var save_game = File.new()
 	save_game.open("user://savegame.save", File.WRITE)
+
+	save_game.store_line(to_json(custom_data))
 
 	var persistingNodes: Array = get_tree().get_nodes_in_group("Persists")
 	for node in persistingNodes:
@@ -24,6 +30,10 @@ func load_game() -> void:
 		node.queue_free()
 
 	save_game.open("user://savegame.save", File.READ)
+
+	if !save_game.eof_reached():
+		custom_data = parse_json(save_game.get_line())
+
 	while !save_game.eof_reached():
 		var json_data = save_game.get_line()
 
