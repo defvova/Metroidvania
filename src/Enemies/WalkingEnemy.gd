@@ -11,9 +11,11 @@ onready var floorLeft := $FloorLeft as RayCast2D
 onready var floorRight := $FloorRight as RayCast2D
 onready var wallLeft := $WallLeft as RayCast2D
 onready var wallRight := $WallRight as RayCast2D
+onready var animationPlayer := $AnimationPlayer as AnimationPlayer
 
 func _ready() -> void:
 	state = WALKING_DIRECTION
+	animationPlayer.play("Run")
 
 func _physics_process(_delta: float) -> void:
 	match state:
